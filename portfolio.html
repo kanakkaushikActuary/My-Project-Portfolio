@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kanak Kaushik — Actuarial &amp; Data Workspace</title>
+<meta name="description" content="Kanak Kaushik — actuarial analyst &amp; data engineer. Interactive project workspace.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪟</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  :root{
+    --bg-0:#0A0D16;
+    --bg-1:#0F1320;
+    --glass: rgba(255,255,255,0.045);
+    --glass-2: rgba(255,255,255,0.07);
+    --border: rgba(255,255,255,0.09);
+    --border-soft: rgba(255,255,255,0.06);
+    --text-hi:#EDEFF7;
+    --text-mid:#B7BBD1;
+    --text-low:#7B8098;
+    --violet:#8C6DFF;
+    --violet-soft: rgba(140,109,255,0.16);
+    --cyan:#3FE0DD;
+    --amber:#FFB871;
+    --pink:#FF7AC6;
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --radius-sm: 9px;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(1200px 600px at 12% -10%, rgba(140,109,255,0.18), transparent 60%),
+      radial-gradient(900px 500px at 100% 0%, rgba(63,224,221,0.10), transparent 55%),
+      var(--bg-0);
+    color:var(--text-hi);
+    font-family:'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{ background:var(--violet-soft); color:#fff; }
+  a{ color:inherit; text-decoration:none; }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+  :focus-visible{ outline:2px solid var(--cyan); outline-offset:2px; border-radius:6px; }
+
+  /* ---------------- Menu bar ---------------- */
+  .menubar{
+    position:sticky; top:0; z-index:80;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0.6rem 1.2rem;
+    background:rgba(10,13,22,0.75);
+    backdrop-filter:blur(16px) saturate(140%);
+    -webkit-backdrop-filter:blur(16px) saturate(140%);
+    border-bottom:1px solid var(--border-soft);
+  }
+  .menubar-left{ display:flex; align-items:center; gap:0.6rem; font-size:0.88rem; color:var(--text-mid); }
+  .menubar-left .dot{ width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 8px var(--cyan); }
+  .menubar-right{ display:flex; align-items:center; gap:1rem; font-size:0.82rem; color:var(--text-low); }
+  #liveClock{ font-family:'JetBrains Mono', monospace; }
+
+  /* ---------------- Header / bio ---------------- */
+  .desktop{ max-width:1240px; margin:0 auto; padding:1.6rem 1.2rem 4rem; }
+
+  .bio-panel{
+    display:flex; flex-wrap:wrap; gap:1.4rem; align-items:center; justify-content:space-between;
+    background:var(--glass);
+    border:1px solid var(--border);
+    border-radius:var(--radius-lg);
+    padding:1.6rem 1.8rem;
+    margin-bottom:1.4rem;
+    backdrop-filter:blur(10px);
+  }
+  .bio-left{ display:flex; align-items:center; gap:1.1rem; min-width:260px; }
+  .avatar{
+    width:58px; height:58px; border-radius:16px;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:1.3rem; color:#fff;
+    background:linear-gradient(135deg, var(--violet), var(--pink));
+    box-shadow:0 8px 24px rgba(140,109,255,0.35);
+    flex-shrink:0;
+  }
+  .bio-name{ font-size:1.35rem; font-weight:800; letter-spacing:-0.01em; }
+  .bio-role{ color:var(--text-mid); font-size:0.92rem; margin-top:0.15rem; }
+  .bio-role .mono{ color:var(--cyan); }
+
+  .bio-links{ display:flex; flex-wrap:wrap; gap:0.55rem; }
+  .bio-btn{
+    display:inline-flex; align-items:center; gap:0.45rem;
+    padding:0.5rem 0.9rem; border-radius:999px;
+    background:var(--glass-2); border:1px solid var(--border);
+    font-size:0.83rem; color:var(--text-hi); transition:transform .15s, border-color .15s, background .15s;
+  }
+  .bio-btn:hover{ transform:translateY(-2px); border-color:var(--violet); background:rgba(140,109,255,0.12); }
+  .bio-btn.primary{ background:linear-gradient(135deg, var(--violet), #6E4CF0); border-color:transparent; color:#fff; font-weight:600; }
+  .bio-btn.primary:hover{ box-shadow:0 8px 20px rgba(140,109,255,0.4); }
+
+  /* ---------------- Main OS window ---------------- */
+  .os-window{
+    background:var(--glass);
+    border:1px solid var(--border);
+    border-radius:var(--radius-lg);
+    overflow:hidden;
+    backdrop-filter:blur(14px);
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.55);
+  }
+  .titlebar{
+    display:flex; align-items:center; gap:0.9rem;
+    padding:0.8rem 1.1rem;
+    background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+    border-bottom:1px solid var(--border-soft);
+  }
+  .traffic{ display:flex; gap:0.45rem; }
+  .traffic span{ width:12px; height:12px; border-radius:50%; display:inline-block; }
+  .traffic .r{ background:#FF6159; }
+  .traffic .y{ background:#FFBD2E; }
+  .traffic .g{ background:#28C93F; }
+  .titlebar-path{
+    font-size:0.8rem; color:var(--text-low);
+  }
+  .titlebar-path b{ color:var(--text-mid); font-weight:500; }
+
+  .window-body{ display:flex; min-height:520px; }
+
+  /* ---------------- Sidebar ---------------- */
+  .sidebar{
+    width:230px; flex-shrink:0;
+    padding:1.3rem 1rem;
+    border-right:1px solid var(--border-soft);
+    background:rgba(255,255,255,0.015);
+  }
+  .sidebar h4{
+    font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em;
+    color:var(--text-low); margin:0 0 0.7rem 0.4rem; font-weight:600;
+  }
+  .filter-btn{
+    display:flex; align-items:center; justify-content:space-between; gap:0.5rem;
+    width:100%; text-align:left;
+    padding:0.55rem 0.7rem; margin-bottom:0.3rem;
+    border-radius:var(--radius-sm); border:1px solid transparent;
+    background:transparent; color:var(--text-mid);
+    font-family:inherit; font-size:0.86rem; cursor:pointer;
+    transition:background .15s, color .15s, border-color .15s;
+  }
+  .filter-btn i{ width:16px; text-align:center; color:var(--text-low); }
+  .filter-btn .count{
+    font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--text-low);
+    background:rgba(255,255,255,0.05); padding:0.05rem 0.4rem; border-radius:6px;
+  }
+  .filter-btn:hover{ background:var(--glass-2); color:var(--text-hi); }
+  .filter-btn.active{
+    background:var(--violet-soft); border-color:rgba(140,109,255,0.4); color:#fff;
+  }
+  .filter-btn.active i{ color:var(--violet); }
+
+  .sidebar-note{
+    margin-top:1.5rem; padding:0.8rem; border-radius:var(--radius-sm);
+    background:rgba(255,255,255,0.02); border:1px dashed var(--border);
+    font-size:0.76rem; color:var(--text-low); line-height:1.5;
+  }
+
+  /* ---------------- Main content ---------------- */
+  .content{ flex:1; padding:1.3rem 1.4rem; min-width:0; }
+
+  .search-row{ display:flex; gap:0.7rem; margin-bottom:1.1rem; flex-wrap:wrap; }
+  .search-box{
+    flex:1; min-width:220px;
+    display:flex; align-items:center; gap:0.6rem;
+    background:rgba(255,255,255,0.04); border:1px solid var(--border);
+    border-radius:var(--radius-md); padding:0.6rem 0.9rem;
+  }
+  .search-box i{ color:var(--text-low); }
+  .search-box input{
+    flex:1; background:none; border:none; outline:none;
+    color:var(--text-hi); font-family:inherit; font-size:0.92rem;
+  }
+  .search-box input::placeholder{ color:var(--text-low); }
+  .result-tally{
+    display:flex; align-items:center; font-size:0.78rem; color:var(--text-low);
+    font-family:'JetBrains Mono',monospace; white-space:nowrap;
+  }
+
+  .mobile-tags{ display:none; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem; }
+  .mobile-tags .filter-btn{ width:auto; }
+
+  .project-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(300px,1fr));
+    gap:1rem;
+  }
+
+  .card{
+    position:relative;
+    background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.02));
+    border:1px solid var(--border);
+    border-radius:var(--radius-md);
+    padding:1.15rem 1.2rem 1.1rem;
+    display:flex; flex-direction:column; gap:0.65rem;
+    transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    cursor:pointer;
+  }
+  .card:hover{
+    transform:translateY(-4px);
+    border-color:rgba(140,109,255,0.45);
+    box-shadow:0 16px 34px -12px rgba(90,60,220,0.35);
+  }
+  .card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:0.6rem; }
+  .card-icon{
+    width:38px; height:38px; border-radius:11px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:1.05rem; color:#0A0D16;
+  }
+  .card-title{ font-size:1.02rem; font-weight:700; letter-spacing:-0.01em; }
+  .card-path{ font-size:0.72rem; color:var(--text-low); margin-top:0.1rem; }
+  .card-desc{ font-size:0.86rem; color:var(--text-mid); line-height:1.5; flex:1; }
+
+  .badge-row{ display:flex; flex-wrap:wrap; gap:0.35rem; }
+  .badge{
+    font-family:'JetBrains Mono',monospace; font-size:0.68rem;
+    padding:0.18rem 0.5rem; border-radius:6px;
+    background:rgba(255,255,255,0.06); color:var(--text-mid); border:1px solid var(--border-soft);
+  }
+
+  .highlight-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0.28rem; }
+  .highlight-list li{ font-size:0.79rem; color:var(--text-mid); display:flex; gap:0.45rem; }
+  .highlight-list li i{ color:var(--cyan); font-size:0.7rem; margin-top:0.28rem; }
+
+  .card-actions{ display:flex; gap:0.55rem; margin-top:0.35rem; flex-wrap:wrap; }
+  .card-actions a{
+    display:inline-flex; align-items:center; gap:0.4rem;
+    font-size:0.78rem; padding:0.4rem 0.75rem; border-radius:8px;
+    border:1px solid var(--border); color:var(--text-hi); background:rgba(255,255,255,0.03);
+    transition:background .15s, border-color .15s;
+  }
+  .card-actions a.demo{ background:linear-gradient(135deg, var(--violet), #6E4CF0); border-color:transparent; color:#fff; font-weight:600; }
+  .card-actions a:hover{ border-color:var(--violet); background:rgba(140,109,255,0.14); }
+  .card-actions a.demo:hover{ box-shadow:0 8px 18px rgba(140,109,255,0.4); }
+
+  .empty-state{
+    text-align:center; padding:3.5rem 1rem; color:var(--text-low);
+  }
+  .empty-state i{ font-size:1.8rem; margin-bottom:0.6rem; display:block; color:var(--violet); }
+
+  /* ---------------- Modal ---------------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(6,8,14,0.72);
+    backdrop-filter:blur(6px);
+    display:none; align-items:center; justify-content:center; z-index:200; padding:1.2rem;
+  }
+  .modal-overlay.open{ display:flex; }
+  .modal{
+    width:min(720px, 100%); max-height:86vh; overflow:auto;
+    background:var(--bg-1); border:1px solid var(--border); border-radius:var(--radius-lg);
+    box-shadow:0 40px 80px rgba(0,0,0,0.6);
+  }
+  .modal .titlebar{ position:sticky; top:0; background:var(--bg-1); z-index:2; }
+  .modal-close{ margin-left:auto; background:none; border:none; color:var(--text-low); font-size:1rem; cursor:pointer; }
+  .modal-close:hover{ color:#fff; }
+  .modal-content{ padding:1.4rem 1.5rem 1.7rem; }
+  .modal-content h2{ margin:0 0 0.3rem; font-size:1.3rem; }
+  .modal-content .card-path{ margin-bottom:0.9rem; }
+  .modal-content p{ color:var(--text-mid); font-size:0.92rem; line-height:1.6; }
+  .modal-frame-wrap{
+    margin-top:1rem; border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border);
+    background:#000; aspect-ratio:16/10;
+  }
+  .modal-frame-wrap iframe{ width:100%; height:100%; border:0; }
+  .modal-frame-fallback{
+    display:flex; align-items:center; justify-content:center; height:100%; color:var(--text-low); font-size:0.85rem; text-align:center; padding:1rem;
+  }
+
+  footer{
+    text-align:center; color:var(--text-low); font-size:0.78rem;
+    padding:2rem 1rem 1rem;
+  }
+
+  /* ---------------- Responsive ---------------- */
+  @media (max-width: 880px){
+    .window-body{ flex-direction:column; }
+    .sidebar{ width:100%; border-right:none; border-bottom:1px solid var(--border-soft); display:none; }
+    .mobile-tags{ display:flex; }
+    .sidebar-note{ display:none; }
+  }
+  @media (max-width: 560px){
+    .bio-panel{ flex-direction:column; align-items:flex-start; }
+    .menubar-right span:not(#liveClock){ display:none; }
+    .titlebar-path{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="menubar">
+  <div class="menubar-left"><span class="dot"></span> Kanak Kaushik <span class="mono" style="color:var(--text-low)">/ workspace</span></div>
+  <div class="menubar-right">
+    <span id="liveClock"></span>
+    <span>⌘ Actuarial &amp; Data Portfolio</span>
+  </div>
+</div>
+
+<div class="desktop">
+
+  <!-- ============= BIO / PROFILE PANEL ============= -->
+  <div class="bio-panel">
+    <div class="bio-left">
+      <div class="avatar">KK</div>
+      <div>
+        <div class="bio-name">Kanak Kaushik</div>
+        <div class="bio-role">Actuarial Analyst &amp; Data Engineer &nbsp;·&nbsp; <span class="mono">CS1 · CM1 · GLM pricing · R/Python</span></div>
+      </div>
+    </div>
+    <div class="bio-links">
+      <!-- EDIT ME: swap these hrefs for your real resume / LinkedIn / email -->
+      <a class="bio-btn" href="https://github.com/kanakkaushikactuary" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> GitHub</a>
+      <a class="bio-btn" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+      <a class="bio-btn" href="#" target="_blank" rel="noopener"><i class="fa-regular fa-file-lines"></i> Résumé</a>
+      <a class="bio-btn primary" href="mailto:hello@example.com"><i class="fa-regular fa-paper-plane"></i> Contact</a>
+    </div>
+  </div>
+
+  <!-- ============= MAIN WINDOW ============= -->
+  <div class="os-window">
+    <div class="titlebar">
+      <div class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+      <div class="titlebar-path mono">kanakkaushikactuary — <b>~/projects</b></div>
+    </div>
+
+    <div class="window-body">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <h4>Categories</h4>
+        <div id="filterList"></div>
+        <div class="sidebar-note">
+          <i class="fa-solid fa-circle-info"></i> New project? Scroll to the <span class="mono">PROJECTS</span> array at the top of the script and add one object — the sidebar, search and grid update automatically.
+        </div>
+      </aside>
+
+      <!-- Content -->
+      <div class="content">
+        <div class="mobile-tags" id="mobileTags"></div>
+
+        <div class="search-row">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="Search projects, tech stack, or tags…">
+          </div>
+          <div class="result-tally" id="resultTally"></div>
+        </div>
+
+        <div class="project-grid" id="projectGrid"></div>
+        <div class="empty-state" id="emptyState" style="display:none;">
+          <i class="fa-regular fa-folder-open"></i>
+          No projects match that search — try a different keyword or category.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>Built as a single self-contained index.html — no build step, deploy straight to GitHub Pages.</footer>
+</div>
+
+<!-- ============= MODAL ============= -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="titlebar">
+      <div class="traffic"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+      <div class="titlebar-path mono" id="modalPath">project</div>
+      <button class="modal-close" id="modalClose"><i class="fa-solid fa-xmark fa-lg"></i></button>
+    </div>
+    <div class="modal-content" id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   EDIT THIS ARRAY TO ADD / REMOVE / UPDATE PROJECTS.
+   Everything else on the page (sidebar categories, search, grid, modal)
+   is generated automatically from this list — just copy the template
+   object below, fill it in, and add it to the PROJECTS array.
+
+   Template:
+   {
+     title:       "Project Name",
+     path:        "~/projects/short-slug",        // shown as the little file-path label
+     description: "One or two sentence summary of what it does.",
+     tech:        ["Python", "R", "SQL"],          // tech-stack badges
+     categories:  ["Data Science & AI"],           // must match / extend CATEGORIES below
+     highlights:  ["Key metric or achievement", "Another highlight"],
+     demoUrl:     "https://your-live-demo-link",
+     repoUrl:     "https://github.com/you/your-repo", // optional — omit or set to "" to hide the button
+     embed:       true,                              // true = try to show a live iframe preview in the modal
+     icon:        "fa-solid fa-chart-line",           // Font Awesome icon class
+     color:       "#8C6DFF"                           // icon tile color (hex)
+   }
+========================================================================= */
+
+const PROJECTS = [
+  {
+    title: "Actuarial Premium Simulator",
+    path: "~/projects/premium-simulator",
+    description: "An interactive pricing simulator for exploring how underwriting assumptions and rating factors flow through into a policy premium, deployed as a live web app.",
+    tech: ["Python", "Cloud Run", "Web App"],
+    categories: ["Data Science & AI", "Web Apps"],
+    highlights: ["Deployed serverlessly on Google Cloud Run", "Live, editable premium assumptions"],
+    demoUrl: "https://actuarial-premium-simulator-657433127151.asia-southeast1.run.app/",
+    repoUrl: "",
+    embed: true,
+    icon: "fa-solid fa-calculator",
+    color: "#8C6DFF"
+  },
+  {
+    title: "Expected Claim Cost Calculator",
+    path: "~/projects/expected-claim-calculator",
+    description: "A frequency–severity GLM pricing engine that fits Poisson frequency and Gamma severity models in-browser via IRLS, on a simulated 8,000-policy motor portfolio split into minor and major perils.",
+    tech: ["JavaScript", "GLM", "IRLS"],
+    categories: ["Data Science & AI", "Tools"],
+    highlights: ["In-browser Poisson + Gamma GLM fitting (IRLS)", "Simulated 8,000-policy motor portfolio", "Built as an IAI CS1 / CS2 demo"],
+    demoUrl: "https://kanakkaushikactuary.github.io/Expected-Claim-Calculator/",
+    repoUrl: "https://github.com/kanakkaushikactuary/Expected-Claim-Calculator",
+    embed: true,
+    icon: "fa-solid fa-file-invoice-dollar",
+    color: "#3FE0DD"
+  },
+  {
+    title: "Markov Chain Triplet",
+    path: "~/projects/markov-chain-triplet",
+    description: "A visual, interactive exploration of Markov chain modelling — states, transition probabilities, and how a chain evolves step by step.",
+    tech: ["JavaScript", "Markov Chains", "Data Viz"],
+    categories: ["Data Science & AI"],
+    highlights: ["Interactive transition-matrix visualisation", "Step-by-step state evolution"],
+    demoUrl: "https://kanakkaushikactuary.github.io/MarchovChain-Triplet-01/",
+    repoUrl: "https://github.com/kanakkaushikactuary/MarchovChain-Triplet-01",
+    embed: true,
+    icon: "fa-solid fa-diagram-project",
+    color: "#FFB871"
+  },
+  {
+    title: "K-Drama Reviews",
+    path: "~/projects/k-drama-reviews",
+    description: "A browsable review and ratings project for K-dramas — a lighter, exploratory data project outside the actuarial core stack.",
+    tech: ["JavaScript", "Data Analysis"],
+    categories: ["Data Science & AI", "Web Apps"],
+    highlights: ["Structured review/ratings dataset", "Interactive browsing UI"],
+    demoUrl: "https://kanakkaushikactuary.github.io/K_drama-reviews/",
+    repoUrl: "https://github.com/kanakkaushikactuary/K_drama-reviews",
+    embed: true,
+    icon: "fa-solid fa-clapperboard",
+    color: "#FF7AC6"
+  },
+  {
+    title: "CS1 & CM1 Actuarial Formula Reference",
+    path: "~/projects/cs1-cm1-formulas",
+    description: "A searchable, categorised formula and notation reference covering the full IAI/IFoA CS1 (Actuarial Statistics) and CM1 (Actuarial Mathematics) syllabus, with LaTeX rendering and copy-to-clipboard support.",
+    tech: ["HTML/CSS", "JavaScript", "MathJax"],
+    categories: ["Tools"],
+    highlights: ["260+ formulas across both syllabi", "Live search and category filtering", "One-click LaTeX copy for study notes"],
+    demoUrl: "https://kanakkaushikactuary.github.io/CS1-CM1-Actuarial-Formulas/",
+    repoUrl: "https://github.com/kanakkaushikactuary/CS1-CM1-Actuarial-Formulas",
+    embed: true,
+    icon: "fa-solid fa-square-root-variable",
+    color: "#8C6DFF"
+  }
+];
+
+// Fixed top-level categories shown in the sidebar (in this order).
+// "All" is added automatically — you don't need to include it here.
+const CATEGORIES = ["Data Science & AI", "Web Apps", "Tools"];
+
+/* ========================================================================= */
+
+(function(){
+  const grid = document.getElementById('projectGrid');
+  const filterList = document.getElementById('filterList');
+  const mobileTags = document.getElementById('mobileTags');
+  const searchInput = document.getElementById('searchInput');
+  const resultTally = document.getElementById('resultTally');
+  const emptyState = document.getElementById('emptyState');
+  let activeCategory = 'All';
+
+  function countFor(cat){
+    if(cat === 'All') return PROJECTS.length;
+    return PROJECTS.filter(p => p.categories.includes(cat)).length;
+  }
+
+  function iconFor(cat){
+    const map = {
+      'All': 'fa-solid fa-grip',
+      'Data Science & AI': 'fa-solid fa-brain',
+      'Web Apps': 'fa-solid fa-window-restore',
+      'Tools': 'fa-solid fa-screwdriver-wrench'
+    };
+    return map[cat] || 'fa-solid fa-tag';
+  }
+
+  function buildFilters(){
+    const cats = ['All', ...CATEGORIES];
+    filterList.innerHTML = '';
+    mobileTags.innerHTML = '';
+    cats.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn' + (cat === activeCategory ? ' active' : '');
+      btn.innerHTML = '<span><i class="' + iconFor(cat) + '"></i> ' + cat + '</span><span class="count">' + countFor(cat) + '</span>';
+      btn.addEventListener('click', () => { activeCategory = cat; buildFilters(); render(); });
+      filterList.appendChild(btn);
+
+      const mbtn = btn.cloneNode(true);
+      mbtn.addEventListener('click', () => { activeCategory = cat; buildFilters(); render(); });
+      mobileTags.appendChild(mbtn);
+    });
+  }
+
+  function matches(p, q){
+    if(activeCategory !== 'All' && !p.categories.includes(activeCategory)) return false;
+    if(!q) return true;
+    q = q.toLowerCase();
+    const hay = [p.title, p.description, ...(p.tech||[]), ...(p.categories||[]), ...(p.highlights||[])].join(' ').toLowerCase();
+    return hay.indexOf(q) > -1;
+  }
+
+  function cardHTML(p, idx){
+    const repoBtn = p.repoUrl ? '<a href="'+p.repoUrl+'" target="_blank" rel="noopener" onclick="event.stopPropagation()"><i class="fa-brands fa-github"></i> Code</a>' : '';
+    return (
+      '<div class="card" data-idx="'+idx+'" tabindex="0">' +
+        '<div class="card-top">' +
+          '<div>' +
+            '<div class="card-title">'+p.title+'</div>' +
+            '<div class="card-path mono">'+p.path+'</div>' +
+          '</div>' +
+          '<div class="card-icon" style="background:'+p.color+'"><i class="'+p.icon+'"></i></div>' +
+        '</div>' +
+        '<div class="card-desc">'+p.description+'</div>' +
+        '<ul class="highlight-list">' + (p.highlights||[]).map(h => '<li><i class="fa-solid fa-caret-right"></i>'+h+'</li>').join('') + '</ul>' +
+        '<div class="badge-row">' + (p.tech||[]).map(t => '<span class="badge">'+t+'</span>').join('') + '</div>' +
+        '<div class="card-actions">' +
+          '<a class="demo" href="'+p.demoUrl+'" target="_blank" rel="noopener" onclick="event.stopPropagation()"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo</a>' +
+          repoBtn +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function render(){
+    const q = searchInput.value.trim();
+    const filtered = PROJECTS.map((p, i) => ({p, i})).filter(x => matches(x.p, q));
+    grid.innerHTML = filtered.map(x => cardHTML(x.p, x.i)).join('');
+    resultTally.textContent = filtered.length + ' / ' + PROJECTS.length + ' shown';
+    emptyState.style.display = filtered.length === 0 ? 'block' : 'none';
+
+    grid.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('click', () => openModal(PROJECTS[+card.dataset.idx]));
+      card.addEventListener('keypress', e => { if(e.key === 'Enter') openModal(PROJECTS[+card.dataset.idx]); });
+    });
+  }
+
+  // ---------------- Modal ----------------
+  const overlay = document.getElementById('modalOverlay');
+  const modalContent = document.getElementById('modalContent');
+  const modalPath = document.getElementById('modalPath');
+
+  function openModal(p){
+    modalPath.textContent = p.path;
+    const repoLine = p.repoUrl ? '<a class="bio-btn" href="'+p.repoUrl+'" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> View Repository</a>' : '';
+    modalContent.innerHTML =
+      '<h2>'+p.title+'</h2>' +
+      '<p>'+p.description+'</p>' +
+      '<div class="badge-row" style="margin:0.6rem 0 1rem">' + (p.tech||[]).map(t => '<span class="badge">'+t+'</span>').join('') + '</div>' +
+      '<div class="bio-links">' +
+        '<a class="bio-btn primary" href="'+p.demoUrl+'" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open Live Demo</a>' +
+        repoLine +
+      '</div>' +
+      (p.embed ? (
+        '<div class="modal-frame-wrap">' +
+          '<iframe src="'+p.demoUrl+'" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display=\'none\'"></iframe>' +
+        '</div>' +
+        '<p style="font-size:0.76rem;color:var(--text-low);margin-top:0.5rem;">If the preview above stays blank, the site blocks embedding — use "Open Live Demo" instead.</p>'
+      ) : '');
+    overlay.classList.add('open');
+  }
+  document.getElementById('modalClose').addEventListener('click', () => overlay.classList.remove('open'));
+  overlay.addEventListener('click', e => { if(e.target === overlay) overlay.classList.remove('open'); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') overlay.classList.remove('open'); });
+
+  // ---------------- Clock ----------------
+  function tick(){
+    const d = new Date();
+    document.getElementById('liveClock').textContent = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  }
+  tick(); setInterval(tick, 15000);
+
+  // ---------------- Search ----------------
+  let t;
+  searchInput.addEventListener('input', () => { clearTimeout(t); t = setTimeout(render, 120); });
+
+  buildFilters();
+  render();
+})();
+</script>
+</body>
+</html>
